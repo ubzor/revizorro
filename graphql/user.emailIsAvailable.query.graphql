@@ -1,0 +1,15 @@
+query EmailIsAvailable($email: String!) {
+  emailIsAvailable(email: $email) {
+    __typename
+    ... on QueryEmailIsAvailableSuccess {
+      data
+    }
+    ... on ZodError {
+      fieldErrors {
+        message
+        path
+      }
+      message
+    }
+  }
+}

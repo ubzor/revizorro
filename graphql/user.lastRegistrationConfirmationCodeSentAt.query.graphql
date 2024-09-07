@@ -1,0 +1,15 @@
+query LastRegistrationConfirmationCodeSentAt($email: String!) {
+  lastRegistrationConfirmationCodeSentAt(email: $email) {
+    __typename
+    ... on QueryLastRegistrationConfirmationCodeSentAtSuccess {
+      data
+    }
+    ... on ZodError {
+      fieldErrors {
+        message
+        path
+      }
+      message
+    }
+  }
+}

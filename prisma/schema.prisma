@@ -1,0 +1,51 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+generator pothos {
+  provider = "prisma-pothos-types"
+  // prismaUtils = true
+}
+
+model User {
+  id                    String             @id @default(uuid())
+  email                 String             @unique
+  hashedPassword        String
+  registrationConfirmed Boolean            @default(false)
+  createdAt             DateTime           @default(now())
+  sessions              Session[]
+  confirmationCodes     ConfirmationCode[]
+}
+
+model Session {
+  id        String   @id @default(uuid())
+  userId    String
+  createdAt DateTime @default(now())
+  expiresAt DateTime
+  user      User     @relation(references: [id], fields: [userId], onDelete: Cascade)
+}
+
+model ConfirmationCodeType {
+  id                String             @id @default(uuid())
+  slug              String             @unique
+  confirmationCodes ConfirmationCode[]
+}
+
+model ConfirmationCode {
+  id        String               @id @default(uuid())
+  userId    String
+  typeId    String
+  code      String
+  createdAt DateTime             @default(now())
+  expiresAt DateTime
+  user      User                 @relation(references: [id], fields: [userId], onDelete: Cascade)
+  type      ConfirmationCodeType @relation(references: [id], fields: [typeId], onDelete: Cascade)
+}
