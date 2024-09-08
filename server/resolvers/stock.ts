@@ -45,6 +45,9 @@ export const setStockSchema = () => {
           data: { skuId, storageId, quantity },
         });
       },
+      errors: {
+        types: [ZodError],
+      },
     }),
 
     moveStock: t.prismaField({
@@ -56,9 +59,6 @@ export const setStockSchema = () => {
         quantity: t.arg.int({ required: true }),
       },
       validate: { schema: moveStockValidationSchema },
-      errors: {
-        types: [Error],
-      },
       resolve: async (_, __, { id, toStorageId, quantity }) => {
         const fromStock = await prisma.stock.findUnique({
           where: { id },
@@ -93,6 +93,9 @@ export const setStockSchema = () => {
         return await prisma.stock.create({
           data: { skuId: fromStock.skuId, storageId: toStorageId, quantity },
         });
+      },
+      errors: {
+        types: [Error, ZodError],
       },
     }),
 
@@ -129,6 +132,9 @@ export const setStockSchema = () => {
         await prisma.stock.delete({ where: { id } });
 
         return true;
+      },
+      errors: {
+        types: [ZodError],
       },
     }),
   }));

@@ -1,0 +1,19 @@
+mutation CreateStorage($label: String!) {
+  createStorage(label: $label) {
+    ... on MutationCreateStorageSuccess {
+      __typename
+      data {
+        id
+        label
+      }
+    }
+    ... on ZodError {
+      __typename
+      fieldErrors {
+        message
+        path
+      }
+      message
+    }
+  }
+}

@@ -28,6 +28,7 @@ server/schema.graphql
 
 # Codegen
 composables/*.query.ts
+composables/*.mutation.ts
 generated
 
 # DB

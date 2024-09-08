@@ -9,12 +9,13 @@ import { setErrorsSchema } from "./errors";
 import { setUserSchema } from "../resolvers/user";
 import { setSkuSchema } from "../resolvers/sku";
 import { setStorageSchema } from "../resolvers/storage";
+import { setStockSchema } from "../resolvers/stock";
 
 setErrorsSchema();
-
 setUserSchema();
 setSkuSchema();
 setStorageSchema();
+setStockSchema();
 
 builder.queryType();
 builder.mutationType();

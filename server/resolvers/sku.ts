@@ -11,6 +11,14 @@ export const setSkuSchema = () => {
     }),
   });
 
+  builder.queryFields((t) => ({
+    listSkus: t.prismaField({
+      type: ["Sku"],
+      nullable: false,
+      resolve: async () => await prisma.sku.findMany(),
+    }),
+  }));
+
   builder.mutationFields((t) => ({
     createSku: t.prismaField({
       type: "Sku",
@@ -25,6 +33,9 @@ export const setSkuSchema = () => {
       },
       resolve: async (_, __, { label }) => {
         return await prisma.sku.create({ data: { label } });
+      },
+      errors: {
+        types: [ZodError],
       },
     }),
   }));

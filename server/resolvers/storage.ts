@@ -11,8 +11,16 @@ export const setStorageSchema = () => {
     }),
   });
 
+  builder.queryFields((t) => ({
+    listStorages: t.prismaField({
+      type: ["Storage"],
+      nullable: false,
+      resolve: async () => await prisma.storage.findMany(),
+    }),
+  }));
+
   builder.mutationFields((t) => ({
-    createSKU: t.prismaField({
+    createStorage: t.prismaField({
       type: "Storage",
       nullable: false,
       args: {
@@ -25,6 +33,9 @@ export const setStorageSchema = () => {
       },
       resolve: async (_, __, { label }) => {
         return await prisma.storage.create({ data: { label } });
+      },
+      errors: {
+        types: [ZodError],
       },
     }),
   }));

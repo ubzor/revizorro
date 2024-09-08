@@ -70,6 +70,9 @@ export const setUserSchema = () => {
       resolve: (_, __, { email, password }) => {
         return null;
       },
+      errors: {
+        types: [ZodError],
+      },
     }),
   }));
 };
