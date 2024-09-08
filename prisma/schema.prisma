@@ -16,36 +16,89 @@ generator pothos {
 }
 
 model User {
-  id                    String             @id @default(uuid())
-  email                 String             @unique
+  id String @id @default(uuid())
+
+  email                 String  @unique
   hashedPassword        String
-  registrationConfirmed Boolean            @default(false)
-  createdAt             DateTime           @default(now())
-  sessions              Session[]
-  confirmationCodes     ConfirmationCode[]
+  registrationConfirmed Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  sessions          Session[]
+  confirmationCodes ConfirmationCode[]
 }
 
 model Session {
-  id        String   @id @default(uuid())
-  userId    String
+  id String @id @default(uuid())
+
+  userId String
+
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
   expiresAt DateTime
-  user      User     @relation(references: [id], fields: [userId], onDelete: Cascade)
+
+  user User @relation(references: [id], fields: [userId], onDelete: Cascade)
 }
 
 model ConfirmationCodeType {
-  id                String             @id @default(uuid())
-  slug              String             @unique
+  id String @id @default(uuid())
+
+  slug String @unique
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
   confirmationCodes ConfirmationCode[]
 }
 
 model ConfirmationCode {
-  id        String               @id @default(uuid())
-  userId    String
-  typeId    String
-  code      String
-  createdAt DateTime             @default(now())
+  id String @id @default(uuid())
+
+  userId String
+  typeId String
+  code   String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
   expiresAt DateTime
-  user      User                 @relation(references: [id], fields: [userId], onDelete: Cascade)
-  type      ConfirmationCodeType @relation(references: [id], fields: [typeId], onDelete: Cascade)
+
+  user User                 @relation(references: [id], fields: [userId], onDelete: Cascade)
+  type ConfirmationCodeType @relation(references: [id], fields: [typeId], onDelete: Cascade)
+}
+
+model Sku {
+  id String @id @default(uuid())
+
+  label String @unique
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  stocks Stock[]
+}
+
+model Storage {
+  id String @id @default(uuid())
+
+  label String @unique
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  stocks Stock[]
+}
+
+model Stock {
+  id String @id @default(uuid())
+
+  skuId     String
+  storageId String
+  quantity  Int
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  sku     Sku     @relation(references: [id], fields: [skuId], onDelete: Cascade)
+  storage Storage @relation(references: [id], fields: [storageId], onDelete: Cascade)
 }

@@ -3,12 +3,18 @@ import { lexicographicSortSchema, printSchema } from "graphql";
 import { DateTimeISOResolver } from "graphql-scalars";
 
 import { builder } from "./builder";
+
 import { setErrorsSchema } from "./errors";
+
 import { setUserSchema } from "../resolvers/user";
+import { setSkuSchema } from "../resolvers/sku";
+import { setStorageSchema } from "../resolvers/storage";
 
 setErrorsSchema();
 
 setUserSchema();
+setSkuSchema();
+setStorageSchema();
 
 builder.queryType();
 builder.mutationType();

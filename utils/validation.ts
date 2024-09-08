@@ -10,6 +10,8 @@ export const validationError = (
   },
 });
 
+// FIELDS
+
 export const emailValidationSchema = z.string().email("Invalid email address");
 
 // TODO: strong password validation
@@ -21,6 +23,17 @@ export const passwordValidationSchema = z
 export const codeValidationSchema = z
   .string()
   .length(6, "Code must be 6 symbols long");
+
+export const labelValidationSchema = z
+  .string()
+  .trim()
+  .min(1, "Label is required");
+
+export const uuidValidationSchema = z.string().uuid();
+
+export const quantityValidationSchema = z.number().min(1);
+
+// FORMS
 
 export const registerFormValidationSchema = z
   .object({
@@ -54,4 +67,29 @@ export const loginFormValidationSchema = z.object({
 
 export const resetPasswordFormValidationSchema = z.object({
   email: emailValidationSchema,
+});
+
+export const createSkuValidationSchema = z.object({
+  label: labelValidationSchema,
+});
+
+export const createStorageValidationSchema = z.object({
+  label: labelValidationSchema,
+});
+
+export const addStockValidationSchema = z.object({
+  skuId: uuidValidationSchema,
+  storageId: uuidValidationSchema,
+  quantity: quantityValidationSchema,
+});
+
+export const removeStockValidationSchema = z.object({
+  id: uuidValidationSchema,
+  quantity: quantityValidationSchema,
+});
+
+export const moveStockValidationSchema = z.object({
+  id: uuidValidationSchema,
+  toStorageId: uuidValidationSchema,
+  quantity: quantityValidationSchema,
 });
