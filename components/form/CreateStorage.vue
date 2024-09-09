@@ -46,7 +46,7 @@
               class="w-full"
               severity="secondary"
               :disabled="isSubmitting"
-              @click=""
+              @click="cancel"
             />
           </div>
         </div>
@@ -59,10 +59,15 @@
 import { useForm } from "vee-validate";
 import { toTypedSchema } from "@vee-validate/zod";
 
+import type { Storage } from "~/generated/schema";
+
 const emit = defineEmits<{
-  (event: "success"): void;
+  (event: "success", payload: Storage): void;
   (event: "cancel"): void;
 }>();
+
+const { executeMutation } = useCreateStorageMutation();
+const toast = useToast();
 
 const { handleSubmit, errors, isSubmitting, defineField, setFieldError } =
   useForm({
@@ -75,7 +80,24 @@ const { handleSubmit, errors, isSubmitting, defineField, setFieldError } =
 
 const [label] = defineField("label");
 
-const createStorage = handleSubmit(async (form) => {});
+const createStorage = handleSubmit(async (form) => {
+  const result = await executeMutation(form);
+
+  if (result.data?.createStorage && "data" in result.data?.createStorage) {
+    toast.add({
+      summary: "Storage created",
+      detail: `Storage "${form.label}" created`,
+      severity: "success",
+      life: 3000,
+    });
+
+    emit("success", result.data.createStorage.data);
+  }
+});
+
+const cancel = () => {
+  emit("cancel");
+};
 </script>
 
 <style lang="sass" scoped>

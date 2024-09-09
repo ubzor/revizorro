@@ -1,8 +1,12 @@
 <template>
-  <div class="grow flex flex-col gap-12 items-top justify-items-start">
+  <div class="grow flex flex-row gap-8 items-top justify-items-start">
     <template v-if="isAuthenticated">
-      <!-- <SkuList /> -->
-      <StorageList />
+      <div class="w-96 h-[calc(100vh-112px)]">
+        <SkuList />
+      </div>
+      <div class="grow">
+        <StorageList />
+      </div>
     </template>
   </div>
 </template>
