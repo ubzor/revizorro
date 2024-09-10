@@ -1,0 +1,21 @@
+mutation AddStock($quantity: Int!, $skuId: String!, $storageId: String!) {
+  addStock(quantity: $quantity, skuId: $skuId, storageId: $storageId) {
+    ... on MutationAddStockSuccess {
+      __typename
+      data {
+        id
+        quantity
+        skuId
+        storageId
+      }
+    }
+    ... on ZodError {
+      __typename
+      fieldErrors {
+        message
+        path
+      }
+      message
+    }
+  }
+}

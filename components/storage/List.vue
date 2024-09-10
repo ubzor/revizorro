@@ -21,7 +21,7 @@
 </template>
 
 <script lang="ts" setup>
-import type { Storage } from "~/generated/schema";
+import type { Storage } from "@/generated/schema";
 
 const { data } = useListStoragesQuery({ variables: {} });
 

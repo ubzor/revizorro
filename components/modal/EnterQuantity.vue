@@ -6,7 +6,7 @@
     :style="{ width: '100%', maxWidth: '25rem' }"
     @after-hide="uiStore.reset()"
   >
-    <FormEnterQuantity @cancel="uiStore.reset()" />
+    <FormEnterQuantity @success="uiStore.reset()" @cancel="uiStore.reset()" />
   </Dialog>
 </template>
 

@@ -2,5 +2,15 @@ query ListStorages {
   listStorages {
     id
     label
+    stocks {
+      id
+      quantity
+      sku {
+        id
+        label
+      }
+      skuId
+      storageId
+    }
   }
 }

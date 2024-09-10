@@ -5,6 +5,11 @@ mutation CreateStorage($label: String!) {
       data {
         id
         label
+        stocks {
+          id
+          quantity
+          skuId
+        }
       }
     }
     ... on ZodError {

@@ -40,7 +40,7 @@
 import { useForm } from "vee-validate";
 import { toTypedSchema } from "@vee-validate/zod";
 
-import type { Sku } from "~/generated/schema";
+import type { Sku } from "@/generated/schema";
 
 const emit = defineEmits<{
   (event: "success", payload: Sku): void;

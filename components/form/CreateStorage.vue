@@ -59,7 +59,7 @@
 import { useForm } from "vee-validate";
 import { toTypedSchema } from "@vee-validate/zod";
 
-import type { Storage } from "~/generated/schema";
+import type { Storage } from "@/generated/schema";
 
 const emit = defineEmits<{
   (event: "success", payload: Storage): void;

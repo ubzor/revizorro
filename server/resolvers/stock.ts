@@ -14,6 +14,13 @@ export const setStockSchema = () => {
       skuId: t.exposeID("skuId"),
       storageId: t.exposeID("storageId"),
       quantity: t.exposeInt("quantity"),
+
+      sku: t.prismaField({
+        type: "Sku",
+        nullable: true,
+        resolve: async (_, { skuId }) =>
+          await prisma.sku.findUnique({ where: { id: skuId } }),
+      }),
     }),
   });
 

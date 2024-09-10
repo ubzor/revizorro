@@ -48,14 +48,22 @@
 </template>
 
 <script lang="ts" setup>
+import { storeToRefs } from "pinia";
 import { useForm } from "vee-validate";
 import { toTypedSchema } from "@vee-validate/zod";
+
+import { UIStates } from "@/types/UIStates";
+
+import type { Stock } from "@/generated/schema";
 
 const emit = defineEmits<{
   (event: "success", payload: any): void;
   (event: "cancel"): void;
 }>();
 
+const { uiState, sku, storage } = storeToRefs(useUIStore());
+
+const { executeMutation } = useAddStockMutation();
 const toast = useToast();
 
 const { handleSubmit, errors, isSubmitting, defineField, setFieldError } =
@@ -69,7 +77,31 @@ const { handleSubmit, errors, isSubmitting, defineField, setFieldError } =
 
 const [quantity] = defineField("quantity");
 
-const onSubmit = handleSubmit(async (form) => {});
+const onSubmit = handleSubmit(async (form) => {
+  switch (uiState.value) {
+    case UIStates.DraggingSkuFromSkuList:
+      if (sku.value && storage.value) {
+        const result = await executeMutation({
+          ...form,
+          skuId: sku.value?.id,
+          storageId: storage.value?.id,
+        });
+
+        if (result.data?.addStock && "data" in result.data?.addStock) {
+          toast.add({
+            summary: "Stock added",
+            detail: `Stock of ${form.quantity} x "${sku.value.label}" added to ${storage.value.label}`,
+            severity: "success",
+            life: 3000,
+          });
+
+          emit("success", result.data.addStock.data);
+        }
+      }
+
+      break;
+  }
+});
 
 const cancel = () => {
   emit("cancel");

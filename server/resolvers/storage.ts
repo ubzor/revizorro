@@ -8,6 +8,13 @@ export const setStorageSchema = () => {
     fields: (t) => ({
       id: t.exposeID("id"),
       label: t.exposeString("label"),
+
+      stocks: t.prismaField({
+        type: ["Stock"],
+        nullable: false,
+        resolve: async (query, { id }) =>
+          await prisma.stock.findMany({ ...query, where: { storageId: id } }),
+      }),
     }),
   });
 

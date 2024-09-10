@@ -4,13 +4,15 @@
       <template #title>{{ storage.label }}</template>
       <template #content>
         <VueDraggable
-          :list="[]"
+          :list="storage.stocks"
           :group="{ name: 'storage' }"
           item-key="id"
           class="flex flex-row flex-wrap gap-2 h-full w-full"
           @change="onDragChange"
         >
-          <template #item="{ element, index }"></template>
+          <template #item="{ element, index }">
+            <StockListItem :stock="element" :key="element.id" />
+          </template>
         </VueDraggable>
       </template>
     </Card>
@@ -23,13 +25,17 @@ import VueDraggable from "vuedraggable";
 
 import { UIStates } from "@/types/UIStates";
 
-import type { Sku, Storage } from "~/generated/schema";
+import type { Sku, Storage } from "@/generated/schema";
 
 const { storage } = defineProps<{
   storage: Storage;
 }>();
 
-const { uiState, isModalEnterQuantityVisible } = storeToRefs(useUIStore());
+const {
+  uiState,
+  storage: uiStateStorage,
+  isModalEnterQuantityVisible,
+} = storeToRefs(useUIStore());
 
 const onDragChange = async ({
   added,
@@ -39,6 +45,7 @@ const onDragChange = async ({
   switch (uiState.value) {
     case UIStates.DraggingSkuFromSkuList:
       if (added) {
+        uiStateStorage.value = storage;
         isModalEnterQuantityVisible.value = true;
       }
 

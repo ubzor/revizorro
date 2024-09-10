@@ -26,7 +26,7 @@ import VueDraggable from "vuedraggable";
 
 import { UIStates } from "@/types/UIStates";
 
-import type { Sku } from "~/generated/schema";
+import type { Sku } from "@/generated/schema";
 
 // const emit = defineEmits<{
 //   (event: "dragStart", payload: Sku): void;
@@ -34,13 +34,13 @@ import type { Sku } from "~/generated/schema";
 
 const { data } = useListSkusQuery({ variables: {} });
 
-const { uiState } = storeToRefs(useUIStore());
+const { uiState, sku } = storeToRefs(useUIStore());
 
 const skus = computed(() => data?.value?.listSkus ?? []);
 
 const onDragStart = ({ oldIndex }: { oldIndex: number }) => {
-  // skus.value[oldIndex]
   uiState.value = UIStates.DraggingSkuFromSkuList;
+  sku.value = skus.value[oldIndex];
 };
 </script>
 
