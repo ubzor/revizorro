@@ -29,6 +29,7 @@
     "@graphql-codegen/typescript-vue-urql": "^3.1.0",
     "@lucia-auth/adapter-prisma": "^4.0.0",
     "@nuxtjs/tailwindcss": "^6.12.0",
+    "@pinia/nuxt": "^0.5.4",
     "@pothos/core": "^3.41.0",
     "@pothos/plugin-errors": "^3.11.1",
     "@pothos/plugin-prisma": "^3.63.1",
@@ -63,6 +64,7 @@
     "vue": "^3.4.19",
     "vue-router": "^4.2.5",
     "vue-tsc": "^1.8.27",
+    "vuedraggable": "^4.1.0",
     "zod": "^3.22.4",
     "zod_utilz": "^0.7.3"
   }

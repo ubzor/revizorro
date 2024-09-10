@@ -77,6 +77,10 @@ export const createStorageValidationSchema = z.object({
   label: labelValidationSchema,
 });
 
+export const enterQuantityFormValidationSchema = z.object({
+  quantity: quantityValidationSchema,
+});
+
 export const addStockValidationSchema = z.object({
   skuId: uuidValidationSchema,
   storageId: uuidValidationSchema,

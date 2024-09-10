@@ -8,4 +8,6 @@
       <slot />
     </div>
   </div>
+
+  <ModalEnterQuantity />
 </template>
