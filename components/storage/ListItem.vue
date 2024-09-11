@@ -5,9 +5,10 @@
       <template #content>
         <VueDraggable
           :list="storage.stocks"
-          :group="{ name: 'storage' }"
+          :group="{ name: 'storage', pull: 'clone' }"
           item-key="id"
           class="flex flex-row flex-wrap gap-2 h-full w-full"
+          @start="onDragStart"
           @change="onDragChange"
         >
           <template #item="{ element, index }">
@@ -34,21 +35,35 @@ const { storage } = defineProps<{
 const {
   uiState,
   storage: uiStateStorage,
+  stock,
   isModalEnterQuantityVisible,
 } = storeToRefs(useUIStore());
+
+const onDragStart = ({ oldIndex }: { oldIndex: number }) => {
+  uiState.value = UIStates.DraggingStockFromStorage;
+  stock.value = storage.stocks[oldIndex];
+};
 
 const onDragChange = async ({
   added,
 }: {
   added?: { element: Sku; newIndex: number };
 }) => {
+  if (!added) return;
+
+  storage.stocks = storage.stocks.filter(({ id }) => id !== added.element.id);
+
   switch (uiState.value) {
     case UIStates.DraggingSkuFromSkuList:
-      if (added) {
+      uiStateStorage.value = storage;
+      isModalEnterQuantityVisible.value = true;
+      break;
+
+    case UIStates.DraggingStockFromStorage:
+      if (storage.id !== stock.value?.storageId) {
         uiStateStorage.value = storage;
         isModalEnterQuantityVisible.value = true;
       }
-
       break;
   }
 };

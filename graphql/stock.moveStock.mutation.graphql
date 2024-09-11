@@ -1,0 +1,25 @@
+mutation MoveStock($id: String!, $quantity: Int!, $toStorageId: String!) {
+  moveStock(id: $id, quantity: $quantity, toStorageId: $toStorageId) {
+    ... on BaseError {
+      __typename
+      message
+    }
+    ... on MutationMoveStockSuccess {
+      __typename
+      data {
+        id
+        quantity
+        skuId
+        storageId
+      }
+    }
+    ... on ZodError {
+      __typename
+      fieldErrors {
+        message
+        path
+      }
+      message
+    }
+  }
+}

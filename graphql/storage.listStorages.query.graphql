@@ -9,8 +9,10 @@ query ListStorages {
         id
         label
       }
-      skuId
-      storageId
+      storage {
+        id
+        label
+      }
     }
   }
 }

@@ -2,7 +2,7 @@ import { defineStore, acceptHMRUpdate } from "pinia";
 
 import { UIStates } from "@/types/UIStates";
 
-import type { Sku, Storage } from "@/generated/schema";
+import type { Sku, Storage, Stock } from "@/generated/schema";
 
 export const useUIStore = defineStore("ui", {
   state: () => ({
@@ -10,6 +10,7 @@ export const useUIStore = defineStore("ui", {
 
     sku: undefined as Sku | undefined,
     storage: undefined as Storage | undefined,
+    stock: undefined as Stock | undefined,
 
     isModalEnterQuantityVisible: false,
   }),
@@ -19,6 +20,7 @@ export const useUIStore = defineStore("ui", {
       this.uiState = undefined;
       this.sku = undefined;
       this.storage = undefined;
+      this.stock = undefined;
       this.isModalEnterQuantityVisible = false;
     },
   },

@@ -21,6 +21,13 @@ export const setStockSchema = () => {
         resolve: async (_, { skuId }) =>
           await prisma.sku.findUnique({ where: { id: skuId } }),
       }),
+
+      storage: t.prismaField({
+        type: "Storage",
+        nullable: true,
+        resolve: async (_, { storageId }) =>
+          await prisma.storage.findUnique({ where: { id: storageId } }),
+      }),
     }),
   });
 
@@ -141,7 +148,7 @@ export const setStockSchema = () => {
         return true;
       },
       errors: {
-        types: [ZodError],
+        types: [Error, ZodError],
       },
     }),
   }));

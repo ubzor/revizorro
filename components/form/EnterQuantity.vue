@@ -9,13 +9,20 @@
             class="w-full"
             :invalid="!!errors.quantity"
             :disabled="isSubmitting"
-          />
+            show-buttons
+            button-layout="horizontal"
+            :min="0"
+            :step="1"
+          >
+            <template #incrementbuttonicon> + </template>
+            <template #decrementbuttonicon> - </template>
+          </InputNumber>
           <label for="create-storage__email">Quantity</label>
         </FloatLabel>
         <InputIcon v-if="errors.quantity">
           <Icon
             name="i-heroicons-exclamation-triangle-20-solid"
-            class="text-red-500"
+            class="text-red-500 mr-10"
             size="16"
           />
         </InputIcon>
@@ -61,9 +68,10 @@ const emit = defineEmits<{
   (event: "cancel"): void;
 }>();
 
-const { uiState, sku, storage } = storeToRefs(useUIStore());
+const { uiState, sku, storage, stock } = storeToRefs(useUIStore());
 
-const { executeMutation } = useAddStockMutation();
+const { executeMutation: executeAddStockMutation } = useAddStockMutation();
+const { executeMutation: executeMoveStockMutation } = useMoveStockMutation();
 const toast = useToast();
 
 const { handleSubmit, errors, isSubmitting, defineField, setFieldError } =
@@ -77,12 +85,12 @@ const { handleSubmit, errors, isSubmitting, defineField, setFieldError } =
 
 const [quantity] = defineField("quantity");
 
-const onSubmit = handleSubmit(async (form) => {
+const onSubmit = handleSubmit(async ({ quantity }) => {
   switch (uiState.value) {
     case UIStates.DraggingSkuFromSkuList:
       if (sku.value && storage.value) {
-        const result = await executeMutation({
-          ...form,
+        const result = await executeAddStockMutation({
+          quantity,
           skuId: sku.value?.id,
           storageId: storage.value?.id,
         });
@@ -90,12 +98,34 @@ const onSubmit = handleSubmit(async (form) => {
         if (result.data?.addStock && "data" in result.data?.addStock) {
           toast.add({
             summary: "Stock added",
-            detail: `Stock of ${form.quantity} x "${sku.value.label}" added to ${storage.value.label}`,
+            detail: `Stock of ${quantity} x "${sku.value.label}" added to ${storage.value.label}`,
             severity: "success",
             life: 3000,
           });
 
           emit("success", result.data.addStock.data);
+        }
+      }
+
+      break;
+
+    case UIStates.DraggingStockFromStorage:
+      if (stock.value && storage.value) {
+        const result = await executeMoveStockMutation({
+          quantity,
+          id: stock.value.id,
+          toStorageId: storage.value.id,
+        });
+
+        if (result.data?.moveStock && "data" in result.data?.moveStock) {
+          toast.add({
+            summary: "Stock moved",
+            detail: `Stock of ${quantity} x "${stock.value.sku?.label}" moved from ${stock.value.storage?.label} to ${storage.value.label}`,
+            severity: "success",
+            life: 3000,
+          });
+
+          emit("success", result.data?.moveStock.data);
         }
       }
 
@@ -107,3 +137,11 @@ const cancel = () => {
   emit("cancel");
 };
 </script>
+
+<style lang="sass" scoped>
+:deep()
+  .p-float-label
+    & > .p-invalid
+      & + label
+        @apply ml-10
+</style>

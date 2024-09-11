@@ -1,0 +1,20 @@
+mutation RemoveStock($id: String!, $quantity: Int!) {
+  removeStock(id: $id, quantity: $quantity) {
+    ... on BaseError {
+      __typename
+      message
+    }
+    ... on MutationRemoveStockSuccess {
+      __typename
+      data
+    }
+    ... on ZodError {
+      __typename
+      fieldErrors {
+        message
+        path
+      }
+      message
+    }
+  }
+}
