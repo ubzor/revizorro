@@ -4,7 +4,7 @@
     :style="{ backgroundColor: 'var(--surface-50)' }"
   >
     <HeaderNavbar />
-    <div class="container mx-auto">
+    <div class="p-4">
       <slot />
     </div>
   </div>

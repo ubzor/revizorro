@@ -6,13 +6,12 @@
       :key="storage.id"
     />
 
-    <div class="w-64 h-64">
-      <StorageAdd
-        v-if="!isAddFormVisible"
-        @click.prevent="isAddFormVisible = true"
-      />
+    <StorageAdd
+      v-if="!isAddFormVisible"
+      @click.prevent="isAddFormVisible = true"
+    />
+    <div v-else class="w-[calc((100%-16px)/3)] h-min-64">
       <FormCreateStorage
-        v-else
         @success="onCreateStorageSuccess"
         @cancel="isAddFormVisible = false"
       />

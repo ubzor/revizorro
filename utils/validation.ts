@@ -77,6 +77,10 @@ export const createStorageValidationSchema = z.object({
   label: labelValidationSchema,
 });
 
+export const filterSkusFormValidationSchema = z.object({
+  searchQuery: labelValidationSchema.optional(),
+});
+
 export const enterQuantityFormValidationSchema = z.object({
   quantity: quantityValidationSchema,
 });

@@ -8,6 +8,8 @@ export const useUIStore = defineStore("ui", {
   state: () => ({
     uiState: undefined as UIStates | undefined,
 
+    searchQuery: "",
+
     sku: undefined as Sku | undefined,
     storage: undefined as Storage | undefined,
     stock: undefined as Stock | undefined,

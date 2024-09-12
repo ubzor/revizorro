@@ -1,5 +1,5 @@
 <template>
-  <div class="w-64 h-64">
+  <div class="w-[calc((100%-16px)/3)] min-h-64">
     <Card class="w-full h-full">
       <template #title>{{ storage.label }}</template>
       <template #content>
@@ -7,7 +7,7 @@
           :list="storage.stocks"
           :group="{ name: 'storage', pull: 'clone' }"
           item-key="id"
-          class="flex flex-row flex-wrap gap-2 h-full w-full"
+          class="flex flex-row flex-wrap gap-2 h-full w-full justify-start items-start items-center content-baseline"
           @start="onDragStart"
           @change="onDragChange"
         >

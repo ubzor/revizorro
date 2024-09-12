@@ -1,5 +1,7 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 
+import Aura from "@primevue/themes/aura";
+
 import path from "node:path";
 // import graphqlLoader from "vite-plugin-graphql-loader";
 
@@ -13,13 +15,13 @@ export default defineNuxtConfig({
     "@vueuse/motion/nuxt",
     "@nuxtjs/tailwindcss",
     "nuxt-icon",
-    "nuxt-primevue",
+    "@primevue/nuxt-module",
   ],
   devtools: { enabled: true },
   // vite: {
   //   plugins: [graphqlLoader()],
   // },
-  css: ["primevue/resources/themes/aura-light-green/theme.css"],
+  css: [],
   vueEmail: {
     baseUrl: "http://localhost:3000/",
     autoImport: true,
@@ -27,6 +29,9 @@ export default defineNuxtConfig({
   primevue: {
     options: {
       ripple: true,
+      theme: {
+        preset: Aura,
+      },
     },
     components: {
       prefix: "",

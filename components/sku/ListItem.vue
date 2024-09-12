@@ -1,10 +1,5 @@
 <template>
-  <Chip class="cursor-move">
-    <div class="flex flex-row gap-1">
-      <div>{{ sku.label }}</div>
-      <Badge value="0" severity="contrast" />
-    </div>
-  </Chip>
+  <StockChip :label="sku.label" :quantity="0" />
 </template>
 
 <script lang="ts" setup>

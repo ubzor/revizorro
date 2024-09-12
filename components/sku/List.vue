@@ -1,11 +1,17 @@
 <template>
   <Card class="w-full h-full">
+    <template #header>
+      <div class="p-4 pb-0">
+        <FormFilterSkus />
+      </div>
+    </template>
+
     <template #content>
       <VueDraggable
         :list="skus"
         :group="{ name: 'storage', pull: 'clone' }"
         item-key="id"
-        class="flex flex-row flex-wrap gap-2"
+        class="flex flex-row flex-wrap gap-2 h-full items-start justify-start content-baseline"
         @start="onDragStart"
       >
         <template #item="{ element, index }">
@@ -34,9 +40,17 @@ import type { Sku } from "@/generated/schema";
 
 const { data } = useListSkusQuery({ variables: {} });
 
-const { uiState, sku } = storeToRefs(useUIStore());
+const { uiState, sku, searchQuery } = storeToRefs(useUIStore());
 
-const skus = computed(() => data?.value?.listSkus ?? []);
+const skus = computed(() => {
+  if (!searchQuery.value) return data?.value?.listSkus ?? [];
+
+  return (
+    data?.value?.listSkus.filter(({ label }) =>
+      label.toLowerCase().includes(searchQuery.value.toLowerCase())
+    ) ?? []
+  );
+});
 
 const onDragStart = ({ oldIndex }: { oldIndex: number }) => {
   uiState.value = UIStates.DraggingSkuFromSkuList;
