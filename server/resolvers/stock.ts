@@ -88,10 +88,14 @@ export const setStockSchema = () => {
           throw new Error("Not enough quantity");
         }
 
-        await prisma.stock.update({
-          where: { id: fromStock.id },
-          data: { quantity: fromStock.quantity - quantity },
-        });
+        if (fromStock.quantity === quantity) {
+          await prisma.stock.delete({ where: { id } });
+        } else {
+          await prisma.stock.update({
+            where: { id: fromStock.id },
+            data: { quantity: fromStock.quantity - quantity },
+          });
+        }
 
         const existingToStock = await prisma.stock.findFirst({
           where: { skuId: fromStock.skuId, storageId: toStorageId },

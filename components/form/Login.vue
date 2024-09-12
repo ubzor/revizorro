@@ -72,25 +72,6 @@
               :loading="isSubmitting"
             />
           </div>
-          <div class="grow">
-            <Button
-              label="Reset password"
-              class="w-full"
-              severity="secondary"
-              :disabled="isSubmitting"
-              @click="navigateTo('/auth/reset-password')"
-            />
-          </div>
-          <div class="col-span-2 text-center mt-4 grow">
-            Do not have an account?
-            <NuxtLink
-              to="/auth/register"
-              class="underline font-medium whitespace-nowrap"
-              :style="{ color: 'var(--primary-color)' }"
-              >Sign Up</NuxtLink
-            >
-            now
-          </div>
         </div>
       </template>
     </Card>

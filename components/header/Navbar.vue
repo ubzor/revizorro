@@ -9,11 +9,21 @@
     <div>
       <Menubar>
         <template #start>
-          <Button label="Auth App" text @click="navigateTo('/')">
+          <Button
+            label="ReviZorro"
+            text
+            @click="navigateTo('/')"
+            class="relative"
+          >
             <template #icon>
               <Icon
-                class="p-button-icon p-button-icon-left"
-                name="lets-icons:sign-in"
+                class="p-button-icon p-button-icon-left text-black mr-2 absolute left-0"
+                name="mdi:zorro-mask"
+                size="64"
+              />
+              <Icon
+                class="p-button-icon p-button-icon-left absolute left-3 mt-5"
+                name="ph:warehouse-fill"
                 size="24"
               />
             </template>
@@ -32,14 +42,6 @@
                 <div>{{ user?.email }}</div>
               </NuxtLink>
               <Button label="Log out" severity="secondary" @click="logout" />
-            </template>
-            <template v-else>
-              <Button label="Sign In" @click="navigateTo('/auth/login')" />
-              <Button
-                label="Sign Up"
-                severity="secondary"
-                @click="navigateTo('/auth/register')"
-              />
             </template>
           </div>
         </template>
@@ -67,4 +69,9 @@ const logout = async () => {
 <style lang="sass" scoped>
 .p-menubar
     @apply border-none bg-transparent
+
+:deep()
+  .p-menubar-start
+    .p-button-label
+        @apply pl-14 text-black
 </style>

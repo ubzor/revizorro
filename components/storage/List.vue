@@ -1,5 +1,6 @@
 <template>
-  <div class="flex flex-row flex-wrap gap-2 w-full">
+  <div v-if="searchQuery && !storages.length" class="w-full">Nothing found</div>
+  <div v-else class="flex flex-row flex-wrap gap-2 w-full">
     <StorageListItem
       v-for="storage in storages"
       :storage="storage"
@@ -22,11 +23,11 @@
 <script lang="ts" setup>
 import type { Storage } from "@/generated/schema";
 
-const { data } = useListStoragesQuery({ variables: {} });
+const { storages } = defineProps<{ storages: Storage[] }>();
+
+const { searchQuery } = storeToRefs(useUIStore());
 
 const isAddFormVisible = ref(false);
-
-const storages = computed(() => data?.value?.listStorages ?? []);
 
 const onCreateStorageSuccess = (_storage: Storage) => {
   isAddFormVisible.value = false;

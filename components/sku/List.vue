@@ -15,7 +15,11 @@
         @start="onDragStart"
       >
         <template #item="{ element, index }">
-          <SkuListItem :sku="element" :key="element.id" />
+          <SkuListItem
+            :sku="element"
+            :key="element.id"
+            :quantity="element.quantity ?? 0"
+          />
         </template>
       </VueDraggable>
     </template>
@@ -32,29 +36,17 @@ import VueDraggable from "vuedraggable";
 
 import { UIStates } from "@/types/UIStates";
 
-import type { Sku } from "@/generated/schema";
+import type { Sku, Storage } from "@/generated/schema";
 
-// const emit = defineEmits<{
-//   (event: "dragStart", payload: Sku): void;
-// }>();
+const { skus } = defineProps<{
+  skus: (Sku & { quantity: number })[];
+}>();
 
-const { data } = useListSkusQuery({ variables: {} });
-
-const { uiState, sku, searchQuery } = storeToRefs(useUIStore());
-
-const skus = computed(() => {
-  if (!searchQuery.value) return data?.value?.listSkus ?? [];
-
-  return (
-    data?.value?.listSkus.filter(({ label }) =>
-      label.toLowerCase().includes(searchQuery.value.toLowerCase())
-    ) ?? []
-  );
-});
+const { uiState, sku } = storeToRefs(useUIStore());
 
 const onDragStart = ({ oldIndex }: { oldIndex: number }) => {
   uiState.value = UIStates.DraggingSkuFromSkuList;
-  sku.value = skus.value[oldIndex];
+  sku.value = skus[oldIndex];
 };
 </script>
 
