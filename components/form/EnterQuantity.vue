@@ -51,9 +51,14 @@
       </div>
       <div>
         <StockChip
+          v-if="
+            uiState === UIStates.DraggingSkuFromSkuList ||
+            (uiState === UIStates.DraggingStockFromStorage && !!storage)
+          "
           :label="storage?.label"
           :quantity="(destinationStockQuantity + quantity!).toString()"
         />
+        <StockChip v-else label="Outside" quantity="..." />
       </div>
     </div>
 
@@ -93,10 +98,15 @@ const emit = defineEmits<{
   (event: "cancel"): void;
 }>();
 
-const { uiState, sku, storage, stock } = storeToRefs(useUIStore());
+const uiStore = useUIStore();
+
+const { uiState, sku, storage, stock } = storeToRefs(uiStore);
 
 const { executeMutation: executeAddStockMutation } = useAddStockMutation();
 const { executeMutation: executeMoveStockMutation } = useMoveStockMutation();
+const { executeMutation: executeRemoveStockMutation } =
+  useRemoveStockMutation();
+
 const toast = useToast();
 
 const maxQuantity = computed(() => {
@@ -184,8 +194,28 @@ const onSubmit = handleSubmit(async ({ quantity }) => {
         }
       }
 
+      if (stock.value) {
+        const result = await executeRemoveStockMutation({
+          quantity,
+          id: stock.value.id,
+        });
+
+        if (result.data?.removeStock && "data" in result.data?.removeStock) {
+          toast.add({
+            summary: "Stock removed",
+            detail: `Stock of ${quantity} x "${stock.value.sku?.label}" removed from ${stock.value.storage?.label}`,
+            severity: "success",
+            life: 3000,
+          });
+
+          emit("success", result.data?.removeStock.data);
+        }
+      }
+
       break;
   }
+
+  uiStore.refetch();
 });
 
 const cancel = () => {

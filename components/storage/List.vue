@@ -25,11 +25,14 @@ import type { Storage } from "@/generated/schema";
 
 const { storages } = defineProps<{ storages: Storage[] }>();
 
-const { searchQuery } = storeToRefs(useUIStore());
+const uiStore = useUIStore();
+
+const { searchQuery } = storeToRefs(uiStore);
 
 const isAddFormVisible = ref(false);
 
 const onCreateStorageSuccess = (_storage: Storage) => {
   isAddFormVisible.value = false;
+  uiStore.refetch();
 };
 </script>

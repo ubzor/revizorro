@@ -25,6 +25,8 @@ export const useUIStore = defineStore("ui", {
       this.stock = undefined;
       this.isModalEnterQuantityVisible = false;
     },
+
+    refetch() {},
   },
 
   getters: {},

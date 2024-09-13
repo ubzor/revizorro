@@ -18,10 +18,15 @@ definePageMeta({
 
 const { isAuthenticated } = useAuth();
 
-const { data: skusData } = useListSkusQuery({ variables: {} });
-const { data: storagesData } = useListStoragesQuery({ variables: {} });
+const { data: skusData, executeQuery: refetchSkus } = useListSkusQuery({
+  variables: {},
+});
+const { data: storagesData, executeQuery: refetchStorages } =
+  useListStoragesQuery({ variables: {} });
 
-const { searchQuery } = storeToRefs(useUIStore());
+const uiStore = useUIStore();
+
+const { searchQuery } = storeToRefs(uiStore);
 
 const skus = computed(() => {
   if (!searchQuery.value) return skusData?.value?.listSkus ?? [];
@@ -61,4 +66,11 @@ const skusWithQuantities = computed(() =>
     ),
   }))
 );
+
+uiStore.$onAction(({ name }) => {
+  if (name === "refetch") {
+    refetchSkus({ requestPolicy: "network-only" });
+    refetchStorages({ requestPolicy: "network-only" });
+  }
+});
 </script>
