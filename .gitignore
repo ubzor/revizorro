@@ -34,3 +34,4 @@ generated
 # DB
 prisma/dev.db
 prisma/dev.db-journal
+prisma/users.json

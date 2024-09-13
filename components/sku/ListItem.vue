@@ -1,5 +1,8 @@
 <template>
-  <StockChip :label="sku.label" :quantity="quantity" />
+  <StockChip
+    :label="sku.label"
+    :quantity="quantity > 0 ? quantity.toString() : undefined"
+  />
 </template>
 
 <script lang="ts" setup>

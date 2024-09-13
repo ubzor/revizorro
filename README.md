@@ -16,6 +16,12 @@ Create `.env` file:
 cp .env.example .env
 ```
 
+Create `prisma/users.json` file:
+
+```bash
+cp ./prisma/users.json.example ./prisma/users.json
+```
+
 Create the database:
 
 ```bash

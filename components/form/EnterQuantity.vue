@@ -1,5 +1,5 @@
 <template>
-  <form class="w-full flex flex-col gap-8" @submit.prevent="onSubmit">
+  <form class="w-full flex flex-col gap-2" @submit.prevent="onSubmit">
     <div class="flex flex-col gap-2">
       <IconField icon-position="right">
         <FloatLabel>
@@ -12,10 +12,11 @@
             show-buttons
             button-layout="horizontal"
             :min="0"
+            :max="maxQuantity"
             :step="1"
           >
-            <template #incrementbuttonicon> + </template>
-            <template #decrementbuttonicon> - </template>
+            <template #incrementicon> + </template>
+            <template #decrementicon> - </template>
           </InputNumber>
           <label for="create-storage__email">Quantity</label>
         </FloatLabel>
@@ -32,7 +33,31 @@
       </small>
     </div>
 
-    <div class="w-full flex flex-wrap gap-2">
+    <div class="w-full flex flex-row justify-between content-between gap-2">
+      <div>
+        <StockChip
+          v-if="uiState === UIStates.DraggingStockFromStorage"
+          :label="stock?.storage?.label"
+          :quantity="(stock?.quantity! - quantity!).toString()"
+        />
+        <StockChip
+          v-else-if="uiState === UIStates.DraggingSkuFromSkuList"
+          label="Outside"
+          quantity="..."
+        />
+      </div>
+      <div>
+        <Icon name="heroicons:arrow-long-right-solid" size="16" />
+      </div>
+      <div>
+        <StockChip
+          :label="storage?.label"
+          :quantity="(destinationStockQuantity + quantity!).toString()"
+        />
+      </div>
+    </div>
+
+    <div class="w-full flex flex-wrap gap-2 mt-4">
       <div class="grow">
         <Button
           label="Submit"
@@ -73,6 +98,36 @@ const { uiState, sku, storage, stock } = storeToRefs(useUIStore());
 const { executeMutation: executeAddStockMutation } = useAddStockMutation();
 const { executeMutation: executeMoveStockMutation } = useMoveStockMutation();
 const toast = useToast();
+
+const maxQuantity = computed(() => {
+  switch (uiState.value) {
+    case UIStates.DraggingSkuFromSkuList:
+      return undefined;
+
+    case UIStates.DraggingStockFromStorage:
+      return stock.value?.quantity;
+  }
+});
+
+const destinationStockQuantity = computed(() => {
+  switch (uiState.value) {
+    case UIStates.DraggingSkuFromSkuList:
+      return (
+        storage.value?.stocks?.find(
+          ({ sku: storageSku }) => storageSku?.id == sku.value?.id
+        )?.quantity ?? 0
+      );
+
+    case UIStates.DraggingStockFromStorage:
+      return (
+        storage.value?.stocks?.find(
+          ({ sku: storageSku }) => storageSku?.id === stock.value?.sku?.id
+        )?.quantity ?? 0
+      );
+  }
+
+  return 0;
+});
 
 const { handleSubmit, errors, isSubmitting, defineField, setFieldError } =
   useForm({

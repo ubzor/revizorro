@@ -1,5 +1,5 @@
 <template>
-  <StockChip :label="stock.sku?.label" :quantity="stock.quantity" />
+  <StockChip :label="stock.sku?.label" :quantity="stock.quantity.toString()" />
 </template>
 
 <script lang="ts" setup>

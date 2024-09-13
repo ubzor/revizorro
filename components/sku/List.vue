@@ -9,7 +9,7 @@
     <template #content>
       <VueDraggable
         :list="skus"
-        :group="{ name: 'storage', pull: 'clone' }"
+        :group="{ name: 'storage' }"
         item-key="id"
         class="flex flex-row flex-wrap gap-2 h-full items-start justify-start content-baseline"
         @start="onDragStart"
@@ -44,9 +44,11 @@ const { skus } = defineProps<{
 
 const { uiState, sku } = storeToRefs(useUIStore());
 
-const onDragStart = ({ oldIndex }: { oldIndex: number }) => {
+const onDragStart = ({ item }: { item: HTMLElement }) => {
   uiState.value = UIStates.DraggingSkuFromSkuList;
-  sku.value = skus[oldIndex];
+
+  // @ts-ignore
+  sku.value = item.__draggable_context.element;
 };
 </script>
 
