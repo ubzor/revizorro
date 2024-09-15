@@ -31,6 +31,10 @@ export default defineNuxtConfig({
       ripple: true,
       theme: {
         preset: Aura,
+        options: {
+          cssLayer:
+            "reset, tailwind-base, tailwind-components, primevue, tailwind-utilities, tailwind-variants",
+        },
       },
     },
     components: {
@@ -54,7 +58,5 @@ export default defineNuxtConfig({
         "Toast",
       ],
     },
-    cssLayerOrder:
-      "reset, tailwind-base, tailwind-components, primevue, tailwind-utilities, tailwind-variants",
   },
 });

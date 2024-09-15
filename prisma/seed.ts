@@ -2,6 +2,7 @@ import { PrismaClient } from "@prisma/client";
 import { Argon2id } from "oslo/password";
 
 import { users } from "@/prisma/users.json";
+import { OperationTypes } from "@/types/OperationTypes";
 
 const prisma = new PrismaClient();
 
@@ -16,21 +17,40 @@ const seedConfirmationCodeTypes = async () => {
 };
 
 const seedUsers = async () => {
-  await prisma.user.createMany({
-    data: await Promise.all(
-      users.map(async ({ email, password }) => ({
-        email,
-        hashedPassword: await new Argon2id().hash(password),
-        registrationConfirmed: true,
-      }))
-    ),
-  });
+  await Promise.all(
+    users.map(async ({ email, password }) => {
+      await prisma.user.upsert({
+        where: { email },
+        update: {},
+        create: {
+          email,
+          hashedPassword: await new Argon2id().hash(password),
+          registrationConfirmed: true,
+        },
+      });
+    })
+  );
+};
+
+const seedOperationTypes = async () => {
+  await Promise.all(
+    Object.values(OperationTypes).map(async (slug) => {
+      await prisma.operationType.upsert({
+        where: { slug },
+        update: {},
+        create: {
+          slug,
+        },
+      });
+    })
+  );
 };
 
 (async () => {
   try {
     await seedConfirmationCodeTypes();
     await seedUsers();
+    seedOperationTypes();
   } catch (error: any) {
     console.error(error);
     await prisma.$disconnect();

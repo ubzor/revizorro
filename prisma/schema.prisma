@@ -27,6 +27,7 @@ model User {
 
   sessions          Session[]
   confirmationCodes ConfirmationCode[]
+  operations        Operation[]
 }
 
 model Session {
@@ -75,7 +76,8 @@ model Sku {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  stocks Stock[]
+  stocks          Stock[]
+  operationStocks OperationStock[]
 }
 
 model Storage {
@@ -86,7 +88,9 @@ model Storage {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  stocks Stock[]
+  stocks              Stock[]
+  operationStocksFrom OperationStock[] @relation("operationStockFrom")
+  operationStocksTo   OperationStock[] @relation("operationStockTo")
 }
 
 model Stock {
@@ -101,4 +105,45 @@ model Stock {
 
   sku     Sku     @relation(references: [id], fields: [skuId], onDelete: Cascade)
   storage Storage @relation(references: [id], fields: [storageId], onDelete: Cascade)
+}
+
+model OperationType {
+  id String @id @default(uuid())
+
+  slug String @unique
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  operations Operation[]
+}
+
+model OperationStock {
+  id String @id @default(uuid())
+
+  skuId         String
+  fromStorageId String?
+  toStorageId   String?
+  operationId   String
+  quantity      Int
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  sku         Sku       @relation(references: [id], fields: [skuId], onDelete: Cascade)
+  fromStorage Storage?  @relation("operationStockFrom", references: [id], fields: [fromStorageId], onDelete: Cascade)
+  toStorage   Storage?  @relation("operationStockTo", references: [id], fields: [toStorageId], onDelete: Cascade)
+  operation   Operation @relation(references: [id], fields: [operationId], onDelete: Cascade)
+}
+
+model Operation {
+  id String @id @default(uuid())
+
+  typeId String
+  userId String
+
+  operationStocks OperationStock[]
+  user            User             @relation(references: [id], fields: [userId], onDelete: Cascade)
+
+  type OperationType @relation(references: [id], fields: [typeId], onDelete: Cascade)
 }
